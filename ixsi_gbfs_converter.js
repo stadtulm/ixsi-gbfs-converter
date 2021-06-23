@@ -6,6 +6,8 @@ class IxsiGbfsConverter {
 	constructor() {
 		this.loadConfig()
 		this.connect()
+		this.writeGbfsJson();
+		this.writeGbfsSystemInformation();
 	}
 
 	loadConfig() {
@@ -16,6 +18,11 @@ class IxsiGbfsConverter {
 			this.ixsiSystemId = config.ixsiSystemId;
 			this.requestSlotDurationSeconds = config.requestSlotDurationSeconds ? config.requestSlotDurationSeconds : 1800;
 			this.requestIntervalSeconds = config.requestIntervalSeconds ? config.requestIntervalSeconds : 120;
+			this.gbfsLanguage = config.gbfsLanguage ? config.gbfsLanguage : "de";
+			this.gbfsEndpoint = config.gbfsEndpoint;
+			this.gbfsSystemId = config.gbfsSystemId;
+			this.gbfsName = config.gbfsName;
+			this.gbfsTimezone = config.gbfsTimezone ? config.gbfsTimezone : "Europe/Berlin"
 		} catch (e) {
 			console.warn("Can't load config.json")
 		}
@@ -233,6 +240,9 @@ class IxsiGbfsConverter {
 
 		let dataString = JSON.stringify(this.gbfsStationStatus, null, 4);
 		fs.writeFileSync("./gbfs/station_status.json", dataString);
+
+		this.writeGbfsJson();
+		this.writeGbfsSystemInformation();
 	}
 
 	sendBookeeRequest() {
@@ -253,6 +263,51 @@ class IxsiGbfsConverter {
 		this.connection.send(requestPayload)
 	}
 
+	/**
+	 * Write gbfs.json file including infos from config
+	 **/
+	writeGbfsJson() {
+		let gbfs = {
+			"last_updated": (Date.now() | 0),
+			"ttl": 0,
+			"version": "2.0",
+			"data": {}
+		}
+		gbfs.data[this.gbfsLanguage] = [
+			{
+				"name": "system_information",
+				"url": `${this.gbfsEndpoint}/system_information.json`
+			},
+			{
+				"name": "station_information",
+				"url": `${this.gbfsEndpoint}/station_information.json`
+			},
+			{
+				"name": "station_status",
+				"url": `${this.gbfsEndpoint}/station_status.json`
+			}
+		]
+
+		let dataString = JSON.stringify(gbfs, null, 4);
+		fs.writeFileSync("./gbfs/gbfs.json", dataString);
+	}
+
+	/**
+	 * Write system_information.json file including infos from config
+	 **/
+	writeGbfsSystemInformation() {
+		let systemInformation = {
+			"system_id": this.gbfsSystemId,
+			"language": this.language,
+			"name": this.gbfsName,
+			"timezone": this.gbfsTimezone,
+			"license_url": "https://creativecommons.org/publicdomain/zero/1.0/deed.de"
+		}
+
+		let dataString = JSON.stringify(systemInformation, null, 4);
+		fs.writeFileSync("./gbfs/system_information.json", dataString);
+	} 
+
 	
 
 
@@ -271,6 +326,11 @@ class IxsiGbfsConverter {
 	requestSlotDurationSeconds = 1800; //default 30 Minutes
 	requestIntervalSeconds = 120; //deafult 2 minutes
 	ixsiSystemId = null; //
+	gbfsLanguage = null; //default "de"
+	gbfsEndpoint = null;
+	gbfsSystemId = null;
+	gbfsName = null;
+	gbfsTimezone = null;
 }
 
 //TODO: bei Place und Bookee kann auch nur ein Wert stehen, dann den noch ein eine Liste verwandeln
