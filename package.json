@@ -1,0 +1,33 @@
+{
+  "name": "ixsi-gbfs-converter",
+  "version": "1.0.0",
+  "description": "Converts IXSI API to GBFS Feed",
+  "main": "ixsi_gbfs_converter.js",
+  "dependencies": {
+    "fast-xml-parser": "^3.19.0",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stadtulm/ixsi-gbfs-converter.git"
+  },
+  "keywords": [
+    "ixsi",
+    "gbfs",
+    "converer",
+    "carsharing",
+    "sharing",
+    "transport",
+    "api"
+  ],
+  "author": "Stadt Ulm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stadtulm/ixsi-gbfs-converter/issues"
+  },
+  "homepage": "https://github.com/stadtulm/ixsi-gbfs-converter#readme"
+}
