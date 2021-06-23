@@ -66,10 +66,12 @@ class IxsiGbfsConverter {
 		let messageId = ixsiObj?.Ixsi?.Response?.Transaction?.MessageID
 		switch (messageId) {
 			case this.messageIdBookie:
+				this.messageIdBookie = this.messageIdBookie + 2; // iterate message ID, so next message gets a new ID
 				this.writeStationInformation(ixsiObj) //write station_information.json
 				this.buildStationStatus(ixsiObj) //prepare station status and do availability request
 				break;
 			case this.messageIdAvailablility:
+				this.messageIdAvailablility = this.messageIdAvailablility + 2 // iterate message ID, so next message gets a new ID
 				this.writeStationStatus(ixsiObj) //parse availabilities and write station_status.json
 				break;
 			default:
@@ -318,8 +320,8 @@ class IxsiGbfsConverter {
 	gbfsStationStatus = null
 
 	// ixsi message id
-	messageIdBookie = 0
-	messageIdAvailablility = 1
+	messageIdBookie = 0 // messageIdBookie are even, get itarated by two after every response
+	messageIdAvailablility = 1 // messageIdBookie are odd, get itarated by two after every response
 
 	// config properties
 	ixsiEndpointUrl = null; // websocket connections string
