@@ -112,11 +112,11 @@ class IxsiGbfsConverter {
 	}
 
 	getResponseTimeStampFromIxsi(ixsiObj) {
-		//let ixsiTimestamp = jsonObj?.Ixsi?.Response?.Transaction?.TimeStamp
-		let ixsiTimestamp = ixsiObj?.Ixsi?.Response?.BaseData?.TimeStamp
+		let ixsiTimestamp = ixsiObj?.Ixsi?.Response?.Transaction?.TimeStamp
+		//let ixsiTimestamp = ixsiObj?.Ixsi?.Response?.BaseData?.TimeStamp
 		if (ixsiTimestamp) {
 			let date = this.getGermanTimezonedDateFromString(ixsiTimestamp)
-			let timestamp = date.getTime()/1000
+			let timestamp = (date.getTime()/1000 | 0)
 			return timestamp;
 		}
 	}
@@ -226,13 +226,13 @@ class IxsiGbfsConverter {
 		if (bookingTargets){
 			for (let bookingTarget of bookingTargets) {
 				let gbfsStation = this.gbfsStationStatus.stations.filter(p => p.station_id == bookingTarget.PlaceID)[0]
+				gbfsStation.last_reported = requestTimestamp
 				if (!bookingTarget.Inavailability) {
 					gbfsStation.num_bikes_available = gbfsStation.num_bikes_available + 1
 					if (gbfsStation.num_docks_available) {
 						gbfsStation.num_docks_available = gbfsStation.num_docks_available - 1
 					}
 				}
-				gbfsStation.last_reported = requestTimestamp
 			}
 		} else {
 			//TODO throw error / warning
