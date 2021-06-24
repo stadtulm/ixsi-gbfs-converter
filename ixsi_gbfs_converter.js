@@ -13,21 +13,18 @@ class IxsiGbfsConverter {
 	}
 
 	loadConfig() {
-		try {
-			const configString = fs.readFileSync("config.json");
-			const config = JSON.parse(configString);
-			this.ixsiEndpointUrl = process.env.IXSI_ENDPOINT_URL || console.error("ixsiEndpointUrl is missing");
-			this.ixsiSystemId = process.env.IXSI_SYSTEM_ID || console.error("ixsiSystemId is missing");
-			this.requestSlotDurationSeconds = process.env.REQUEST_SLOT_DURATION_SECONDS || 1800; //TODO convert to int?
-			this.requestIntervalSeconds = process.env.REQUEST_INTERVAL_SECONDS || 120; //TODO convert to int?
-			this.gbfsLanguage = process.env.GBFS_LANGUAGE || "de";
-			this.gbfsEndpoint = process.env.GBFS_ENDPOINT || console.error("gbfsEndpoint is missing");
-			this.gbfsSystemId = process.env.GBFS_SYSTEM_ID || "ixsi-gbfs-converter";
-			this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
-			this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
-		} catch (e) {
-			console.warn("Can't load config.json")
-		}
+		this.ixsiEndpointUrl = process.env.IXSI_ENDPOINT_URL;
+		if (typeof this.ixsiEndpointUrl === "undefined" || this.ixsiEndpointUrl === "") throw "IXSI_ENDPOINT_URL is missing";
+		this.ixsiSystemId = process.env.IXSI_SYSTEM_ID;
+		if (typeof this.ixsiSystemId === "undefined" || this.ixsiSystemId === "") throw "IXSI_ENDPOINT_URL is missing";
+		this.requestSlotDurationSeconds = parseInt(process.env.REQUEST_SLOT_DURATION_SECONDS || "1800");
+		this.requestIntervalSeconds = parseInt(process.env.REQUEST_INTERVAL_SECONDS || "120");
+		this.gbfsLanguage = process.env.GBFS_LANGUAGE || "de";
+		this.gbfsEndpoint = process.env.GBFS_ENDPOINT;
+		if (typeof this.gbfsEndpoint === "undefined" || this.gbfsEndpoint === "") throw "GBFS_ENDPOINT is missing";
+		this.gbfsSystemId = process.env.GBFS_SYSTEM_ID || "ixsi-gbfs-converter";
+		this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
+		this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
 	}
 
 	connect() {
