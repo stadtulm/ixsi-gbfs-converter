@@ -189,13 +189,23 @@ class IxsiGbfsConverter {
 
   buildAvailabilityRequest(ixsiObj, beginDate, endDate) {
     let places = ixsiObj?.Ixsi?.Response?.BaseData?.Place;
-    let bookees = ixsiObj?.Isxsi?.Response?.BaseData?.Bookee;
+    let bookees = ixsiObj?.Ixsi?.Response?.BaseData?.Bookee;
     let xmlBookingTargets = [];
     let beginDateString = beginDate.toISOString();
     let endDateString = endDate.toISOString();
 
+    // fix list, if none or only one bookee or palce object
+    if (!bookees) {
+    	bookees = []
+    }
     if (!Array.isArray(bookees)) {
         bookees = [bookees]
+    }
+    if (!places) {
+    	places = []
+    }
+    if (!Array.isArray(places)) {
+        places = [places]
     }
 
     // begin use booking targets as selector - alternative could be radius
