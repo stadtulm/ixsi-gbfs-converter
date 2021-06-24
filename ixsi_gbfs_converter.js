@@ -210,7 +210,7 @@ class IxsiGbfsConverter {
     // end use booking targets as selector
 
     let requestPayload = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-			<Ixsi xmlns="http:// www.ixsi-schnittstelle.de/">
+			<Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
 			  <Request>
 			    <Transaction>
 			      <TimeStamp>${new Date().toISOString()}</TimeStamp>
@@ -262,7 +262,7 @@ class IxsiGbfsConverter {
 
   sendBookeeRequest() {
     let requestPayload = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-			<Ixsi xmlns="http:// www.ixsi-schnittstelle.de/">
+			<Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
 			  <Request>
 			    <Transaction>
 			      <TimeStamp>${new Date().toISOString()}</TimeStamp>
