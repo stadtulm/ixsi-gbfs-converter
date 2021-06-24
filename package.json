@@ -4,6 +4,7 @@
   "description": "Converts IXSI API to GBFS Feed",
   "main": "ixsi_gbfs_converter.js",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "fast-xml-parser": "^3.19.0",
     "ws": "^7.4.6"
   },

@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const parser = require('fast-xml-parser');
 const WebSocket = require('ws');
