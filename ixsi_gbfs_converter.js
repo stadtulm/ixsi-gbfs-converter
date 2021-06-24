@@ -72,6 +72,7 @@ class IxsiGbfsConverter {
    **/
   parseIXSI(ixsiXML) {
     let ixsiObj = parser.parse(ixsiXML);
+    this.cleanParsingIssues(ixsiObj)
     let messageId = ixsiObj?.Ixsi?.Response?.Transaction?.MessageID;
     switch (messageId) {
       case this.messageIdBookie:
@@ -85,6 +86,39 @@ class IxsiGbfsConverter {
         break;
       default:
         break;
+    }
+  }
+
+  /**
+   * Fixes format issues from XML parsing
+   * e.g. XML parser doenst know it is a list, if there is only one object 
+   * */
+  cleanParsingIssues(ixsiObj) {
+    let baseData = ixsiObj?.Ixsi?.Response?.BaseData;
+    if (baseData) {
+      // fix list, if none or only one Bookee or Place object
+      if (!baseData.Bookee) {
+        baseData.Bookee = []
+      }
+      if (!Array.isArray(baseData.Bookee)) {
+          baseData.Bookee = [baseData.Bookee]
+      }
+      if (!baseData.Place) {
+        baseData.Place = []
+      }
+      if (!Array.isArray(baseData.Place)) {
+          baseData.Place = [baseData.Place]
+      }
+    }
+
+    let availability = ixsiObj?.Ixsi?.Response?.Availability; //?.BookingTarget;
+    if (availability) {
+      if (!availability.BookingTarget) {
+        availability.BookingTarget = []
+      }
+      if (!Array.isArray(availability.BookingTarget)) {
+          availability.BookingTarget = [availability.BookingTarget]
+      }
     }
   }
 
@@ -193,20 +227,6 @@ class IxsiGbfsConverter {
     let xmlBookingTargets = [];
     let beginDateString = beginDate.toISOString();
     let endDateString = endDate.toISOString();
-
-    // fix list, if none or only one bookee or palce object
-    if (!bookees) {
-    	bookees = []
-    }
-    if (!Array.isArray(bookees)) {
-        bookees = [bookees]
-    }
-    if (!places) {
-    	places = []
-    }
-    if (!Array.isArray(places)) {
-        places = [places]
-    }
 
     // begin use booking targets as selector - alternative could be radius
 
