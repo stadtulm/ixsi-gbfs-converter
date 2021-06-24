@@ -316,7 +316,7 @@ class IxsiGbfsConverter {
       language: this.language,
       name: this.gbfsName,
       timezone: this.gbfsTimezone,
-      license_url: "https:// creativecommons.org/publicdomain/zero/1.0/deed.de",
+      license_url: "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
     };
 
     let dataString = JSON.stringify(systemInformation, null, 4);
