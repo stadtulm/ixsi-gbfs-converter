@@ -14,28 +14,18 @@ class IxsiGbfsConverter {
 		try {
 			const configString = fs.readFileSync("config.json");
 			const config = JSON.parse(configString);
-//			this.ixsiEndpointUrl = config.ixsiEndpointUrl;
-//			this.ixsiSystemId = config.ixsiSystemId;
-//			this.requestSlotDurationSeconds = config.requestSlotDurationSeconds ? config.requestSlotDurationSeconds : 1800;
-//			this.requestIntervalSeconds = config.requestIntervalSeconds ? config.requestIntervalSeconds : 120;
-//			this.gbfsLanguage = config.gbfsLanguage ? config.gbfsLanguage : "de";
-//			this.gbfsEndpoint = config.gbfsEndpoint;
-//			this.gbfsSystemId = config.gbfsSystemId;
-//			this.gbfsName = config.gbfsName;
-//			this.gbfsTimezone = config.gbfsTimezone ? config.gbfsTimezone : "Europe/Berlin"
-			this.ixsiEndpointUrl = process.env.ixsiEndpointUrl || console.error("ixsiEndpointUrl is missing");
-			this.ixsiSystemId = process.env.ixsiSystemId || console.error("ixsiSystemId is missing");
-			this.requestSlotDurationSeconds = process.env.requestSlotDurationSeconds || 1800; //TODO convert to int?
-			this.requestIntervalSeconds = process.env.requestIntervalSeconds || 120; //TODO convert to int?
-			this.gbfsLanguage = process.env.gbfsLanguage || "de";
-			this.gbfsEndpoint = process.env.gbfsEndpoint || console.error("gbfsEndpoint is missing");
-			this.gbfsSystemId = process.env.gbfsSystemId || "ixsi-gbfs-converter";
-			this.gbfsName = process.env.gbfsName || "GBFS Feed from IXSI";
-			this.gbfsTimezone = process.env.gbfsTimezone || "Europe/Berlin";
+			this.ixsiEndpointUrl = process.env.IXSI_ENDPOINT_URL || console.error("ixsiEndpointUrl is missing");
+			this.ixsiSystemId = process.env.IXSI_SYSTEM_ID || console.error("ixsiSystemId is missing");
+			this.requestSlotDurationSeconds = process.env.REQUEST_SLOT_DURATION_SECONDS || 1800; //TODO convert to int?
+			this.requestIntervalSeconds = process.env.REQUEST_INTERVAL_SECONDS || 120; //TODO convert to int?
+			this.gbfsLanguage = process.env.GBFS_LANGUAGE || "de";
+			this.gbfsEndpoint = process.env.GBFS_ENDPOINT || console.error("gbfsEndpoint is missing");
+			this.gbfsSystemId = process.env.GBFS_SYSTEM_ID || "ixsi-gbfs-converter";
+			this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
+			this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
 		} catch (e) {
 			console.warn("Can't load config.json")
 		}
-		
 	}
 
 	connect() {
