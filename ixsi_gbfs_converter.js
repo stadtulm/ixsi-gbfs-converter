@@ -194,6 +194,10 @@ class IxsiGbfsConverter {
     let beginDateString = beginDate.toISOString();
     let endDateString = endDate.toISOString();
 
+    if (!Array.isArray(bookees)) {
+        bookees = [bookees]
+    }
+
     // begin use booking targets as selector - alternative could be radius
 
     for (let bookee of bookees) {
