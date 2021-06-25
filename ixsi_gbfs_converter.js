@@ -11,7 +11,6 @@ class IxsiGbfsConverter {
     this.createGbfsFolder();
     this.startServer();
     this.connect();
-    this.writeGbfsJson();
     this.writeGbfsSystemInformation();
   }
 
@@ -52,6 +51,13 @@ class IxsiGbfsConverter {
     this.expressApp = express()
     this.expressApp.listen(this.httpServerPort)
     this.expressApp.use(express.static('gbfs'));
+
+    this.expressApp.get('/gbfs.json', (req, res) => {
+
+      let endpoint = this.gbfsEndpoint
+      console.log(req)
+      res.send(this.getGbfsJson(endpoint))
+    })
   }
 
   connect() {
@@ -308,7 +314,6 @@ class IxsiGbfsConverter {
     let dataString = JSON.stringify(this.gbfsStationStatus, null, 4);
     fs.writeFileSync("./gbfs/station_status.json", dataString);
 
-    this.writeGbfsJson();
     this.writeGbfsSystemInformation();
   }
 
@@ -333,7 +338,7 @@ class IxsiGbfsConverter {
   /**
    * Write gbfs.json file including infos from config
    **/
-  writeGbfsJson() {
+  getGbfsJson(endpoint) {
     let gbfs = {
       last_updated: Date.now() | 0,
       ttl: 0,
@@ -343,20 +348,18 @@ class IxsiGbfsConverter {
     gbfs.data[this.gbfsLanguage] = [
       {
         name: "system_information",
-        url: `${this.gbfsEndpoint}/system_information.json`,
+        url: `${endpoint}/system_information.json`,
       },
       {
         name: "station_information",
-        url: `${this.gbfsEndpoint}/station_information.json`,
+        url: `${endpoint}/station_information.json`,
       },
       {
         name: "station_status",
-        url: `${this.gbfsEndpoint}/station_status.json`,
+        url: `${endpoint}/station_status.json`,
       },
     ];
-
-    let dataString = JSON.stringify(gbfs, null, 4);
-    fs.writeFileSync("./gbfs/gbfs.json", dataString);
+    return gbfs;
   }
 
   /**
