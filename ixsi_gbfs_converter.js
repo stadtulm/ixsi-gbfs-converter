@@ -52,6 +52,10 @@ class IxsiGbfsConverter {
     this.expressApp.listen(this.httpServerPort)
     this.expressApp.use(express.static('gbfs'));
 
+    this.expressApp.get('/', (req, res) => {
+      res.redirect('/gbfs.json');
+    });
+
     this.expressApp.get('/gbfs.json', (req, res) => {
 
       let endpoint = this.gbfsEndpoint
