@@ -3,6 +3,7 @@ require("dotenv").config();
 const fs = require("fs");
 const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
+const express = require('express')
 
 class IxsiGbfsConverter {
   constructor() {
@@ -36,6 +37,8 @@ class IxsiGbfsConverter {
     this.gbfsSystemId = process.env.GBFS_SYSTEM_ID || "ixsi-gbfs-converter";
     this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
     this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
+
+    this.httpServerPort = parseInt(process.env.HTTP_SERVER_PORT || "8000");
   }
 
   createGbfsFolder() {
@@ -46,7 +49,9 @@ class IxsiGbfsConverter {
   }
 
   startServer() {
-
+    this.expressApp = express()
+    this.expressApp.listen(this.httpServerPort)
+    this.expressApp.use(express.static('gbfs'));
   }
 
   connect() {
@@ -114,13 +119,13 @@ class IxsiGbfsConverter {
         baseData.Bookee = []
       }
       if (!Array.isArray(baseData.Bookee)) {
-          baseData.Bookee = [baseData.Bookee]
+        baseData.Bookee = [baseData.Bookee]
       }
       if (!baseData.Place) {
         baseData.Place = []
       }
       if (!Array.isArray(baseData.Place)) {
-          baseData.Place = [baseData.Place]
+        baseData.Place = [baseData.Place]
       }
     }
 
@@ -372,6 +377,7 @@ class IxsiGbfsConverter {
 
   connection = null;
   intervalReference = null;
+  expressApp = null;
 
   gbfsStationStatus = null;
 
@@ -389,6 +395,7 @@ class IxsiGbfsConverter {
   gbfsSystemId = null;
   gbfsName = null;
   gbfsTimezone = null;
+  httpServerPort = null; //default 8000
 }
 
 // TODO: bei Place und Bookee kann auch nur ein Wert stehen, dann den noch ein eine Liste verwandeln
