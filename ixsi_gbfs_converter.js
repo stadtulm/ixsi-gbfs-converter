@@ -60,6 +60,7 @@ class IxsiGbfsConverter {
         let host = req.headers["x-forwarded-host"];
         let port = req.headers["x-forwarded-port"] || "80";
         let prefix = req.headers["x-forwarded-prefix"] || "";
+        prefix = prefix.replace(/\/$/g, '');
         if (port == "80" || port == "443") {
           port = ""
         } else {
