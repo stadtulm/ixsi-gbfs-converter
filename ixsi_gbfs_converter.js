@@ -7,6 +7,8 @@ const WebSocket = require("ws");
 class IxsiGbfsConverter {
   constructor() {
     this.loadConfig();
+    this.createGbfsFolder();
+    this.startServer();
     this.connect();
     this.writeGbfsJson();
     this.writeGbfsSystemInformation();
@@ -34,6 +36,17 @@ class IxsiGbfsConverter {
     this.gbfsSystemId = process.env.GBFS_SYSTEM_ID || "ixsi-gbfs-converter";
     this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
     this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
+  }
+
+  createGbfsFolder() {
+    let gbfsFolder = "./gbfs"
+    if (!fs.existsSync(gbfsFolder)){
+      fs.mkdirSync(gbfsFolder);
+    }
+  }
+
+  startServer() {
+
   }
 
   connect() {
@@ -111,7 +124,7 @@ class IxsiGbfsConverter {
       }
     }
 
-    let availability = ixsiObj?.Ixsi?.Response?.Availability; //?.BookingTarget;
+    let availability = ixsiObj?.Ixsi?.Response?.Availability;
     if (availability) {
       if (!availability.BookingTarget) {
         availability.BookingTarget = []
