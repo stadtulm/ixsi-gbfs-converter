@@ -3,7 +3,7 @@ require("dotenv").config();
 const fs = require("fs");
 const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
-const express = require('express')
+const express = require("express");
 
 class IxsiGbfsConverter {
   constructor() {
@@ -16,7 +16,10 @@ class IxsiGbfsConverter {
 
   loadConfig() {
     this.ixsiEndpointUrl = process.env.IXSI_ENDPOINT_URL;
-    if (typeof this.ixsiEndpointUrl === "undefined" || this.ixsiEndpointUrl === "") {
+    if (
+      typeof this.ixsiEndpointUrl === "undefined" ||
+      this.ixsiEndpointUrl === ""
+    ) {
       throw "IXSI_ENDPOINT_URL is missing";
     }
 
@@ -25,8 +28,12 @@ class IxsiGbfsConverter {
       throw "IXSI_ENDPOINT_URL is missing";
     }
 
-    this.requestSlotDurationSeconds = parseInt(process.env.REQUEST_SLOT_DURATION_SECONDS || "1800");
-    this.requestIntervalSeconds = parseInt(process.env.REQUEST_INTERVAL_SECONDS || "120");
+    this.requestSlotDurationSeconds = parseInt(
+      process.env.REQUEST_SLOT_DURATION_SECONDS || "1800"
+    );
+    this.requestIntervalSeconds = parseInt(
+      process.env.REQUEST_INTERVAL_SECONDS || "120"
+    );
     this.gbfsLanguage = process.env.GBFS_LANGUAGE || "de";
     this.gbfsEndpoint = process.env.GBFS_ENDPOINT;
     if (typeof this.gbfsEndpoint === "undefined" || this.gbfsEndpoint === "") {
@@ -41,39 +48,38 @@ class IxsiGbfsConverter {
   }
 
   createGbfsFolder() {
-    let gbfsFolder = "./gbfs"
-    if (!fs.existsSync(gbfsFolder)){
+    let gbfsFolder = "./gbfs";
+    if (!fs.existsSync(gbfsFolder)) {
       fs.mkdirSync(gbfsFolder);
     }
   }
 
   startServer() {
-    this.expressApp = express()
-    this.expressApp.listen(this.httpServerPort)
-    this.expressApp.use(express.static('gbfs'));
+    this.expressApp = express();
+    this.expressApp.listen(this.httpServerPort);
+    this.expressApp.use(express.static("gbfs"));
 
-    this.expressApp.get('/', (req, res) => {
-      res.redirect('/gbfs.json');
+    this.expressApp.get("/", (req, res) => {
+      res.redirect("/gbfs.json");
     });
 
-    this.expressApp.get('/gbfs.json', (req, res) => {
-
-      let endpoint = this.gbfsEndpoint
+    this.expressApp.get("/gbfs.json", (req, res) => {
+      let endpoint = this.gbfsEndpoint;
       if (req.headers["x-forwarded-host"]) {
         let protocol = req.headers["x-forwarded-proto"] || "http";
         let host = req.headers["x-forwarded-host"];
         let port = req.headers["x-forwarded-port"] || "80";
         let prefix = req.headers["x-forwarded-prefix"] || "";
-        prefix = prefix.replace(/\/$/g, '');
+        prefix = prefix.replace(/\/$/g, "");
         if (port == "80" || port == "443") {
-          port = ""
+          port = "";
         } else {
-          port = ":" + port
+          port = ":" + port;
         }
-        endpoint = `${protocol}://${host}${port}${prefix}`
+        endpoint = `${protocol}://${host}${port}${prefix}`;
       }
-      res.send(this.getGbfsJson(endpoint))
-    })
+      res.send(this.getGbfsJson(endpoint));
+    });
   }
 
   connect() {
@@ -112,7 +118,7 @@ class IxsiGbfsConverter {
    **/
   parseIXSI(ixsiXML) {
     let ixsiObj = parser.parse(ixsiXML);
-    this.cleanParsingIssues(ixsiObj)
+    this.cleanParsingIssues(ixsiObj);
     let messageId = ixsiObj?.Ixsi?.Response?.Transaction?.MessageID;
     switch (messageId) {
       case this.messageIdBookie:
@@ -131,33 +137,33 @@ class IxsiGbfsConverter {
 
   /**
    * Fixes format issues from XML parsing
-   * e.g. XML parser doenst know it is a list, if there is only one object 
+   * e.g. XML parser doenst know it is a list, if there is only one object
    * */
   cleanParsingIssues(ixsiObj) {
     let baseData = ixsiObj?.Ixsi?.Response?.BaseData;
     if (baseData) {
       // fix list, if none or only one Bookee or Place object
       if (!baseData.Bookee) {
-        baseData.Bookee = []
+        baseData.Bookee = [];
       }
       if (!Array.isArray(baseData.Bookee)) {
-        baseData.Bookee = [baseData.Bookee]
+        baseData.Bookee = [baseData.Bookee];
       }
       if (!baseData.Place) {
-        baseData.Place = []
+        baseData.Place = [];
       }
       if (!Array.isArray(baseData.Place)) {
-        baseData.Place = [baseData.Place]
+        baseData.Place = [baseData.Place];
       }
     }
 
     let availability = ixsiObj?.Ixsi?.Response?.Availability;
     if (availability) {
       if (!availability.BookingTarget) {
-        availability.BookingTarget = []
+        availability.BookingTarget = [];
       }
       if (!Array.isArray(availability.BookingTarget)) {
-          availability.BookingTarget = [availability.BookingTarget]
+        availability.BookingTarget = [availability.BookingTarget];
       }
     }
   }
@@ -240,7 +246,7 @@ class IxsiGbfsConverter {
             is_installed: true,
             is_renting: true,
             is_returning: true,
-            // 						last_reported: requestTimestamp // TODO - maybe that should be changed in the second request
+            //             last_reported: requestTimestamp // TODO - maybe that should be changed in the second request
           };
 
           if (place.Capacity) {
@@ -255,8 +261,14 @@ class IxsiGbfsConverter {
     if (bookees) {
       let beginDate = new Date();
       let endDate = new Date();
-      endDate.setSeconds(beginDate.getSeconds() + this.requestSlotDurationSeconds);
-      let availabilityRequestXML = this.buildAvailabilityRequest(ixsiObj, beginDate, endDate);
+      endDate.setSeconds(
+        beginDate.getSeconds() + this.requestSlotDurationSeconds
+      );
+      let availabilityRequestXML = this.buildAvailabilityRequest(
+        ixsiObj,
+        beginDate,
+        endDate
+      );
       this.connection.send(availabilityRequestXML);
     }
   }
@@ -271,38 +283,39 @@ class IxsiGbfsConverter {
     // begin use booking targets as selector - alternative could be radius
 
     for (let bookee of bookees) {
-      let providerId = places.filter((p) => p.ID == bookee.PlaceID)[0]?.ProviderID;
+      let providerId = places.filter((p) => p.ID == bookee.PlaceID)[0]
+        ?.ProviderID;
       let target = `
-				<BookingTarget>
-		  			<BookeeID>${bookee.ID}</BookeeID>
-					<ProviderID>${providerId}</ProviderID>
-				</BookingTarget>
-			`;
+        <BookingTarget>
+            <BookeeID>${bookee.ID}</BookeeID>
+          <ProviderID>${providerId}</ProviderID>
+        </BookingTarget>
+      `;
       xmlBookingTargets.push(target);
     }
 
     // end use booking targets as selector
 
     let requestPayload = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-			<Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
-			  <Request>
-			    <Transaction>
-			      <TimeStamp>${new Date().toISOString()}</TimeStamp>
-			      <MessageID>${this.messageIdAvailablility}</MessageID>
-			    </Transaction>
-			    <SystemID>${this.ixsiSystemId}</SystemID>
-			    <Auth>
-			      <Anonymous>true</Anonymous>
-			    </Auth>
-			    <Availability>
-			    	${xmlBookingTargets.join("")}
-			    	<TimePeriod>
-				    	<Begin>${beginDateString}</Begin>
-				      <End>${endDateString}</End>
-				    </TimePeriod>
-			    </Availability>
-			  </Request>
-			</Ixsi>`;
+      <Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
+        <Request>
+          <Transaction>
+            <TimeStamp>${new Date().toISOString()}</TimeStamp>
+            <MessageID>${this.messageIdAvailablility}</MessageID>
+          </Transaction>
+          <SystemID>${this.ixsiSystemId}</SystemID>
+          <Auth>
+            <Anonymous>true</Anonymous>
+          </Auth>
+          <Availability>
+            ${xmlBookingTargets.join("")}
+            <TimePeriod>
+              <Begin>${beginDateString}</Begin>
+              <End>${endDateString}</End>
+            </TimePeriod>
+          </Availability>
+        </Request>
+      </Ixsi>`;
     return requestPayload;
   }
 
@@ -314,12 +327,15 @@ class IxsiGbfsConverter {
     let requestTimestamp = this.getResponseTimeStampFromIxsi(ixsiObj);
     if (bookingTargets) {
       for (let bookingTarget of bookingTargets) {
-        let gbfsStation = this.gbfsStationStatus.stations.filter((p) => p.station_id == bookingTarget.PlaceID)[0];
+        let gbfsStation = this.gbfsStationStatus.stations.filter(
+          (p) => p.station_id == bookingTarget.PlaceID
+        )[0];
         gbfsStation.last_reported = requestTimestamp;
         if (!bookingTarget.Inavailability) {
           gbfsStation.num_bikes_available = gbfsStation.num_bikes_available + 1;
           if (gbfsStation.num_docks_available) {
-            gbfsStation.num_docks_available = gbfsStation.num_docks_available - 1;
+            gbfsStation.num_docks_available =
+              gbfsStation.num_docks_available - 1;
           }
         }
       }
@@ -335,19 +351,19 @@ class IxsiGbfsConverter {
 
   sendBookeeRequest() {
     let requestPayload = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-			<Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
-			  <Request>
-			    <Transaction>
-			      <TimeStamp>${new Date().toISOString()}</TimeStamp>
-			      <MessageID>${this.messageIdBookie}</MessageID>
-			    </Transaction>
-			    <SystemID>${this.ixsiSystemId}</SystemID>
-			    <BaseData>
-			      <IncludeBookees>true</IncludeBookees>
-			      <IncludeChargers>false</IncludeChargers>
-			    </BaseData>
-			  </Request>
-			</Ixsi>`;
+      <Ixsi xmlns="http://www.ixsi-schnittstelle.de/">
+        <Request>
+          <Transaction>
+            <TimeStamp>${new Date().toISOString()}</TimeStamp>
+            <MessageID>${this.messageIdBookie}</MessageID>
+          </Transaction>
+          <SystemID>${this.ixsiSystemId}</SystemID>
+          <BaseData>
+            <IncludeBookees>true</IncludeBookees>
+            <IncludeChargers>false</IncludeChargers>
+          </BaseData>
+        </Request>
+      </Ixsi>`;
     this.connection.send(requestPayload);
   }
 
