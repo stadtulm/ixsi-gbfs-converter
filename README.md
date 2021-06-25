@@ -17,3 +17,4 @@ Config is applied as enviroment variables.
 * `GBFS_SYSTEM_ID`: This is used as `system_id` in `system_information.json` file. Default: `ixsi-gbfs-converter`
 * `GBFS_NAME`: Human readable name of the sharing system, used in `system_information.json`. Default: `GBFS Feed from IXSI`
 * `GBFS_TIMEZONE`: This is used as `timezone` in `system_information.json`, see https://www.iana.org/time-zones. Default: `Europe/Berlin`
+* `HTTP_SERVER_PORT`: Port the gbfs is served on
