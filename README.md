@@ -17,11 +17,13 @@ Config is applied as enviroment variables.
 * `GBFS_SYSTEM_ID`: This is used as `system_id` in `system_information.json` file. Default: `ixsi-gbfs-converter`
 * `GBFS_NAME`: Human readable name of the sharing system, used in `system_information.json`. Default: `GBFS Feed from IXSI`
 * `GBFS_TIMEZONE`: This is used as `timezone` in `system_information.json`, see https://www.iana.org/time-zones. Default: `Europe/Berlin`
-* `PORT`: Port the gbfs is served on
+* `PORT`: Port the gbfs is served on. Default: 8000.
 
 ## Usage
 
 The container connects to the IXSI websocket endpoint and places the resulting GBFS into the `gbfs` folder, that will be created if it doesn't exist.
+
+The gbfs data is reachable on port 8000 (or your configured one in `PORT`). If you have a reverse proxy in front of it, the converter supports `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`, `X-Forwarded-Prefix` headers. Look especially into the `X-Forwarded-Prefix` header, if you provide the gbfs externally in a subdirectory.
 
 ### Docker
 
