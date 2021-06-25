@@ -38,7 +38,7 @@ class IxsiGbfsConverter {
     this.gbfsName = process.env.GBFS_NAME || "GBFS Feed from IXSI";
     this.gbfsTimezone = process.env.GBFS_TIMEZONE || "Europe/Berlin";
 
-    this.httpServerPort = parseInt(process.env.HTTP_SERVER_PORT || "8000");
+    this.httpServerPort = parseInt(process.env.PORT || "8000");
   }
 
   createGbfsFolder() {
