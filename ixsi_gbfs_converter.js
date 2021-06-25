@@ -56,7 +56,6 @@ class IxsiGbfsConverter {
 
   startServer() {
     this.expressApp = express();
-    this.expressApp.listen(this.httpServerPort);
     this.expressApp.use(express.static("gbfs"));
 
     this.expressApp.get("/", (req, res) => {
@@ -80,10 +79,13 @@ class IxsiGbfsConverter {
       }
       res.send(this.getGbfsJson(endpoint));
     });
+
+    console.log(`serving gbfs on http://0.0.0.0:${this.httpServerPort}`);
+    this.expressApp.listen(this.httpServerPort);
   }
 
   connect() {
-    console.log("endpoint URL", this.ixsiEndpointUrl);
+    console.log("connecting to ixsi endpoint ", this.ixsiEndpointUrl);
     this.connection = new WebSocket(this.ixsiEndpointUrl);
 
     this.connection.onerror = (error) => {
