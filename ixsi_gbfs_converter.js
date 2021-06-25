@@ -55,7 +55,18 @@ class IxsiGbfsConverter {
     this.expressApp.get('/gbfs.json', (req, res) => {
 
       let endpoint = this.gbfsEndpoint
-      console.log(req)
+      if (req.headers["X-Forwarded-Host"]) {
+        let protocol = req.headers["X-Forwarded-Proto"] || "http";
+        let host = req.headers["X-Forwarded-Host"];
+        let port = req.headers["X-Forwarded-Port"] || "80";
+        let prefix = req.headers["X-Forwarded-Prefix"] || "";
+        if (port == "80" || port == "443") {
+          port = ""
+        } else {
+          port = ":" + port
+        }
+        endpoint = `${protocol}://${host}${port}${prefix}`
+      }
       res.send(this.getGbfsJson(endpoint))
     })
   }
