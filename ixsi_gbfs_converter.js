@@ -374,7 +374,7 @@ class IxsiGbfsConverter {
    **/
   getGbfsJson(endpoint) {
     let gbfs = {
-      last_updated: Date.now() | 0,
+      last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
       version: "2.0",
       data: {},
