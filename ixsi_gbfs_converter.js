@@ -196,7 +196,7 @@ class IxsiGbfsConverter {
         if (name && station_id && lat && lon) {
           let station = {
             name: name,
-            station_id: station_id,
+            station_id: station_id.toString(),
             lat: lat,
             lon: lon,
           };
@@ -255,7 +255,7 @@ class IxsiGbfsConverter {
         // only include if requiered fields are available
         if (station_id) {
           let station = {
-            station_id: station_id,
+            station_id: station_id.toString(),
             num_bikes_available: 0,
             is_installed: true,
             is_renting: true,
@@ -342,7 +342,7 @@ class IxsiGbfsConverter {
     if (bookingTargets) {
       for (let bookingTarget of bookingTargets) {
         let gbfsStation = this.gbfsStationStatus.data.stations.filter(
-          (p) => p.station_id == bookingTarget.PlaceID
+          (p) => p.station_id == bookingTarget.PlaceID.toString()
         )[0];
         gbfsStation.last_reported = requestTimestamp;
         if (!bookingTarget.Inavailability) {
