@@ -5,6 +5,8 @@ const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
 const express = require("express");
 
+const GBFS_VERSION = "2.0"
+
 class IxsiGbfsConverter {
   constructor() {
     this.loadConfig();
@@ -181,6 +183,7 @@ class IxsiGbfsConverter {
       },
       last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
+      version: GBFS_VERSION,
     };
     if (places) {
       for (let place of places) {
@@ -242,6 +245,7 @@ class IxsiGbfsConverter {
       },
       last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
+      version: GBFS_VERSION,
     };
 
     if (places) {
@@ -384,7 +388,7 @@ class IxsiGbfsConverter {
     let gbfs = {
       last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
-      version: "2.0",
+      version: GBFS_VERSION,
       data: {},
     };
     gbfs.data[this.gbfsLanguage] = {}
@@ -412,13 +416,14 @@ class IxsiGbfsConverter {
     let systemInformation = {
       data: {
         system_id: this.gbfsSystemId,
-        language: this.language,
+        language: this.gbfsLanguage,
         name: this.gbfsName,
         timezone: this.gbfsTimezone,
         license_url: "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
       },
       last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
+      version: GBFS_VERSION,
     };
 
     let dataString = JSON.stringify(systemInformation, null, 4);
