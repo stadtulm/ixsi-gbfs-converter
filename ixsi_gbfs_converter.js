@@ -379,7 +379,8 @@ class IxsiGbfsConverter {
       version: "2.0",
       data: {},
     };
-    gbfs.data[this.gbfsLanguage] = [
+    gbfs.data[this.gbfsLanguage] = {}
+    gbfs.data[this.gbfsLanguage]['feeds'] = [
       {
         name: "system_information",
         url: `${endpoint}/system_information.json`,
