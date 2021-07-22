@@ -5,6 +5,8 @@ const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
 const express = require("express");
 
+const GBFS_VERSION = "2.0"
+
 class IxsiGbfsConverter {
   constructor() {
     this.loadConfig();
@@ -176,7 +178,12 @@ class IxsiGbfsConverter {
   writeStationInformation(ixsiObj) {
     let places = ixsiObj?.Ixsi?.Response?.BaseData?.Place;
     let gbfsStationInformation = {
-      stations: [],
+      data: {
+        stations: [],
+      },
+      last_updated: (Date.now() / 1000) | 0,
+      ttl: 0,
+      version: GBFS_VERSION,
     };
     if (places) {
       for (let place of places) {
@@ -189,14 +196,14 @@ class IxsiGbfsConverter {
         if (name && station_id && lat && lon) {
           let station = {
             name: name,
-            station_id: station_id,
+            station_id: station_id.toString(),
             lat: lat,
             lon: lon,
           };
           if (place?.Capacity) {
             station.capacity = place?.Capacity;
           }
-          gbfsStationInformation.stations.push(station);
+          gbfsStationInformation.data.stations.push(station);
         }
       }
     }
@@ -233,7 +240,12 @@ class IxsiGbfsConverter {
     let places = ixsiObj?.Ixsi?.Response?.BaseData?.Place;
     let bookees = ixsiObj?.Ixsi?.Response?.BaseData?.Bookee;
     this.gbfsStationStatus = {
-      stations: [],
+      data: {
+        stations: []
+      },
+      last_updated: (Date.now() / 1000) | 0,
+      ttl: 0,
+      version: GBFS_VERSION,
     };
 
     if (places) {
@@ -243,7 +255,7 @@ class IxsiGbfsConverter {
         // only include if requiered fields are available
         if (station_id) {
           let station = {
-            station_id: station_id,
+            station_id: station_id.toString(),
             num_bikes_available: 0,
             is_installed: true,
             is_renting: true,
@@ -255,7 +267,7 @@ class IxsiGbfsConverter {
             station.num_docks_available = place.Capacity;
           }
 
-          this.gbfsStationStatus.stations.push(station);
+          this.gbfsStationStatus.data.stations.push(station);
         }
       }
     }
@@ -329,8 +341,8 @@ class IxsiGbfsConverter {
     let requestTimestamp = this.getResponseTimeStampFromIxsi(ixsiObj);
     if (bookingTargets) {
       for (let bookingTarget of bookingTargets) {
-        let gbfsStation = this.gbfsStationStatus.stations.filter(
-          (p) => p.station_id == bookingTarget.PlaceID
+        let gbfsStation = this.gbfsStationStatus.data.stations.filter(
+          (p) => p.station_id == bookingTarget.PlaceID.toString()
         )[0];
         gbfsStation.last_reported = requestTimestamp;
         if (!bookingTarget.Inavailability) {
@@ -376,10 +388,11 @@ class IxsiGbfsConverter {
     let gbfs = {
       last_updated: (Date.now() / 1000) | 0,
       ttl: 0,
-      version: "2.0",
+      version: GBFS_VERSION,
       data: {},
     };
-    gbfs.data[this.gbfsLanguage] = [
+    gbfs.data[this.gbfsLanguage] = {}
+    gbfs.data[this.gbfsLanguage]['feeds'] = [
       {
         name: "system_information",
         url: `${endpoint}/system_information.json`,
@@ -401,11 +414,16 @@ class IxsiGbfsConverter {
    **/
   writeGbfsSystemInformation() {
     let systemInformation = {
-      system_id: this.gbfsSystemId,
-      language: this.language,
-      name: this.gbfsName,
-      timezone: this.gbfsTimezone,
-      license_url: "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
+      data: {
+        system_id: this.gbfsSystemId,
+        language: this.gbfsLanguage,
+        name: this.gbfsName,
+        timezone: this.gbfsTimezone,
+        license_url: "https://creativecommons.org/publicdomain/zero/1.0/deed.de",
+      },
+      last_updated: (Date.now() / 1000) | 0,
+      ttl: 0,
+      version: GBFS_VERSION,
     };
 
     let dataString = JSON.stringify(systemInformation, null, 4);
