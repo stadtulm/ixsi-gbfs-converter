@@ -4,6 +4,7 @@ const fs = require("fs");
 const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
 const express = require("express");
+const cors = require('cors');
 
 const GBFS_VERSION = "2.0"
 
@@ -58,6 +59,7 @@ class IxsiGbfsConverter {
 
   startServer() {
     this.expressApp = express();
+    this.expressApp.use(cors());
     this.expressApp.use(express.static("gbfs"));
 
     this.expressApp.get("/", (req, res) => {
