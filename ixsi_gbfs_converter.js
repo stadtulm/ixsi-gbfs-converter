@@ -5,6 +5,7 @@ const parser = require("fast-xml-parser");
 const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
+const { DateTime } = require("luxon");
 
 const GBFS_VERSION = "2.0"
 
@@ -215,24 +216,14 @@ class IxsiGbfsConverter {
 
   getResponseTimeStampFromIxsi(ixsiObj) {
     let ixsiTimestamp = ixsiObj?.Ixsi?.Response?.Transaction?.TimeStamp;
-    // let ixsiTimestamp = ixsiObj?.Ixsi?.Response?.BaseData?.TimeStamp
     if (ixsiTimestamp) {
-      let date = this.getGermanTimezonedDateFromString(ixsiTimestamp);
-      let timestamp = (date.getTime() / 1000) | 0;
-      return timestamp;
+      // IXSI seems to use local timestrings without declared timezone (but implicit Europe/Berlin),
+      // so we convert them to timezoned in UTC
+      let date = DateTime.fromISO(ixsiTimestamp, {
+          zone: "Europe/Berlin"
+        }).setZone("UTC");
+      return (date.toSeconds() | 0);
     }
-  }
-
-  /**
-   * IXIS seems to use Local timestrings without declared timezone, so we convert them to timezoned UTC-Zone
-   **/
-  getGermanTimezonedDateFromString(timeString) {
-    // can't believe this is the supposed way to do this in Javascipt
-    return new Date(
-      new Date(timeString).toLocaleString("en-US", {
-        timeZone: "Europe/Berlin",
-      })
-    );
   }
 
   /**
