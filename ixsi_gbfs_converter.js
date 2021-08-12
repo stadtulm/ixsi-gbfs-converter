@@ -107,6 +107,7 @@ class IxsiGbfsConverter {
     };
 
     this.connection.onmessage = (e) => {
+      this.lastReceivedDataTime = Date.now()/1000
       this.parseIXSI(e.data);
     };
 
@@ -118,6 +119,28 @@ class IxsiGbfsConverter {
         this.sendBookeeRequest();
       }, this.requestIntervalSeconds * 1000);
     };
+
+    this.connection.onclose = (e) => {
+      console.warn("Connection closed. info: ", e)
+      // stop old interval
+      clearInterval(this.intervalReference);
+      setTimeout(()=>{
+        console.log("reconnect")
+        this.connect()
+      }, 1000)
+    }
+  }
+
+  sendData(data) {
+    this.connection.send(data);
+    //check after 10 seonds, if we have a result
+    setTimeout(()=>{
+      //if last send message has no aswer after 10 seconds, close and reconnect
+      if (this.lastReceivedDataTime < Date.now()/1000 - 11) {
+        console.warn("response timepout, reconnect...")
+        this.connection.close()
+      }
+    }, 10*1000);
   }
 
   /**
@@ -276,7 +299,7 @@ class IxsiGbfsConverter {
         beginDate,
         endDate
       );
-      this.connection.send(availabilityRequestXML);
+      this.sendData(availabilityRequestXML);
     }
   }
 
@@ -371,7 +394,7 @@ class IxsiGbfsConverter {
           </BaseData>
         </Request>
       </Ixsi>`;
-    this.connection.send(requestPayload);
+    this.sendData(requestPayload);
   }
 
   /**
@@ -444,6 +467,7 @@ class IxsiGbfsConverter {
   gbfsName = null;
   gbfsTimezone = null;
   httpServerPort = null; //default 8000
+  lastReceivedDataTime = 0;
 }
 
 // TODO: bei Place und Bookee kann auch nur ein Wert stehen, dann den noch ein eine Liste verwandeln
