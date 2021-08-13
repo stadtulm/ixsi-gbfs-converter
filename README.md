@@ -39,3 +39,7 @@ To install and run:
 npm install
 npm start
 ```
+
+## IXSI documentation
+
+You can find XSD files and generated visualisation in [ixsi-documentation](./ixsi-documentation/) folder.
