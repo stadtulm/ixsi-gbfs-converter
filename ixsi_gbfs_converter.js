@@ -121,7 +121,7 @@ class IxsiGbfsConverter {
     };
 
     this.connection.onclose = (e) => {
-      console.warn("Connection closed. info: ", e)
+      console.warn("Connection closed.")
       // stop old interval
       clearInterval(this.intervalReference);
       setTimeout(()=>{
