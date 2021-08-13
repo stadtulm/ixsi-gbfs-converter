@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2013 (x64) (http://www.altova.com) von Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) -->
+<xs:schema xmlns="http://www.ixsi-schnittstelle.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.ixsi-schnittstelle.de/" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<!--*******************************************************************-->
+	<!--Interface for X-Sharing Information (IXSI)-->
+	<!--*******************************************************************-->
+	<!--Spezifikation, Version 5.00 vom 2018-01-10-->
+	<!--Urheber: Peter von Grumbkow, HaCon Ing.-Ges. mbH und Dirk Hillbrecht, cantamen GmbH-->
+	<!--Diese Schnittstellenspezifikation steht unter folgender Lizenz: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Specification, Version 5.00 of 2018-01-10-->
+	<!--Authors: Peter von Grumbkow, HaCon Ing.-Ges. mbH and Dirk Hillbrecht, cantamen GmbH-->
+	<!--This interface specification is licensed according to: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Base type definitions XSD file-->
+	<!--*******************************************************************-->
+	<xs:annotation>
+		<xs:documentation>**** ID type definitions ****</xs:documentation>
+	</xs:annotation>
+	<xs:simpleType name="DomainIDType">
+		<xs:annotation>
+			<xs:documentation>IDs for free-floating domains.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="PlaceIDType">
+		<xs:annotation>
+			<xs:documentation>Place IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="PlaceGroupIDType">
+		<xs:annotation>
+			<xs:documentation>Place group IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="ChargerIDType">
+		<xs:annotation>
+			<xs:documentation>Charger IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="BookeeIDType">
+		<xs:annotation>
+			<xs:documentation>Bookee IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="ProviderIDType">
+		<xs:annotation>
+			<xs:documentation>Provider IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="SessionIDType">
+		<xs:annotation>
+			<xs:documentation>Session IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="UserIDType">
+		<xs:annotation>
+			<xs:documentation>User IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="SystemIDType">
+		<xs:annotation>
+			<xs:documentation>System IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="GlobalIDType">
+		<xs:annotation>
+			<xs:documentation>Globally unique IDs for identifiying clone entities.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:anyURI"/>
+	</xs:simpleType>
+	<xs:simpleType name="AttributeIDType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for attribute codes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:complexType name="ChargingPlaceIDType">
+		<xs:annotation>
+			<xs:documentation>Charging place IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ChargerID" type="ChargerIDType"/>
+			<xs:element name="ProviderID" type="ProviderIDType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BookingTargetIDType">
+		<xs:annotation>
+			<xs:documentation>Booking target IDs.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="BookeeID" type="BookeeIDType"/>
+			<xs:element name="ProviderID" type="ProviderIDType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ProviderPlaceIDType">
+		<xs:annotation>
+			<xs:documentation>Provider/place combinations.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ProviderID" type="ProviderIDType"/>
+			<xs:element name="PlaceID" type="PlaceIDType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** General type definitions ****</xs:documentation>
+	</xs:annotation>
+	<xs:simpleType name="EuroPriceType">
+		<xs:annotation>
+			<xs:documentation>Prices in Euro cents.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger"/>
+	</xs:simpleType>
+	<xs:simpleType name="PercentType">
+		<xs:annotation>
+			<xs:documentation>Percent between 0 and 100.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CoordType">
+		<xs:annotation>
+			<xs:documentation>Geodecimal coordinates. The reference ellipsoid is always WGS84 (GPS).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Longitude">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:minInclusive value="-180.0"/>
+						<xs:maxInclusive value="180.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Latitude">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:minInclusive value="-90.0"/>
+						<xs:maxInclusive value="90.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeoRectangleType">
+		<xs:annotation>
+			<xs:documentation>Geographic rectangle.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="UpperLeft" type="CoordType">
+				<xs:annotation>
+					<xs:documentation>Upper left corner of the geographic rectangle.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LowerRight" type="CoordType">
+				<xs:annotation>
+					<xs:documentation>Lower right corner of the geographic rectangle.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeoCircleType">
+		<xs:annotation>
+			<xs:documentation>Geographic circle.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Center" type="CoordType">
+				<xs:annotation>
+					<xs:documentation>Coordinates of the circle center.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Radius" type="xs:nonNegativeInteger">
+				<xs:annotation>
+					<xs:documentation>Radius in meters of the circle.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PolygonType">
+		<xs:annotation>
+			<xs:documentation>Geographic closed polygon. Its border must in no case touch or cut itself.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PolyPoint" type="CoordType" minOccurs="3" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Geo positions of the closed border polygon. Its border must in no case touch or cut itself.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="DurationGroup">
+		<xs:annotation>
+			<xs:documentation>Group for the probable duration and its variance for getting a booking target.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Duration" type="xs:duration">
+				<xs:annotation>
+					<xs:documentation>Probable duration for finding a booking target. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Variance" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Variance of the probable duration for finding a booking target. The probable duration can vary by this value up or down.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="DurationPolygonType">
+		<xs:annotation>
+			<xs:documentation>Geographic closed polygon with access duration. Its border must in no case touch or cut itself.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PolygonType">
+				<xs:sequence>
+					<xs:group ref="DurationGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AddressType">
+		<xs:annotation>
+			<xs:documentation>Address.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Country" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of the country.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PostalCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Complete postal code of the address.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="City" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Name of the city.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StreetHouseNr" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Street and house number in one string.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeoPositionType">
+		<xs:annotation>
+			<xs:documentation>Geopraphical position.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Coord" type="CoordType">
+				<xs:annotation>
+					<xs:documentation>Geographical coordinates.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Address" type="AddressType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Optional address of the geographical position.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TimePeriodType">
+		<xs:annotation>
+			<xs:documentation>Time period.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Begin" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Begining of the time period.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="End" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Ending of the time period.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TimePeriodProposalType">
+		<xs:annotation>
+			<xs:documentation>Time period proposal.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Begin" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Wished begining of the booking.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="End" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Wished ending of the booking. Always needed for station fixed bookings.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxWait" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Maximal waiting time until the booking actually may begin in order to fulfil the booking time grid.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TextType">
+		<xs:annotation>
+			<xs:documentation>Text with language.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Text" type="xs:string"/>
+			<xs:element name="Language" type="xs:language" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Language identifier according to BCP 47, which is based in ISO 639.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UserInfoType">
+		<xs:annotation>
+			<xs:documentation>User identification.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ProviderID" type="ProviderIDType">
+				<xs:annotation>
+					<xs:documentation>ID of the provider of the user. Without the user ID is not unique.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserID" type="UserIDType">
+				<xs:annotation>
+					<xs:documentation>User ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="Password" type="xs:normalizedString">
+					<xs:annotation>
+						<xs:documentation>Password of the user.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Token" type="xs:token">
+					<xs:annotation>
+						<xs:documentation>Authentication token for the user, which replaces the password for data security reasons.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AuthType">
+		<xs:annotation>
+			<xs:documentation>Authentication within a request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="SessionID" type="SessionIDType">
+					<xs:annotation>
+						<xs:documentation>Valid session ID. If a session is reused, fill this one.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="UserInfo" type="UserInfoType">
+					<xs:annotation>
+						<xs:documentation>If no session is available, the user has to authenticate.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Anonymous" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>If neither an existing session, nor a use information is available, an anonyous session can be opened.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ProviderSpecificAnonymous" type="ProviderIDType">
+					<xs:annotation>
+						<xs:documentation>Anonymous session, with given provider ID. Pretend, user is a user of the referred provider. </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="SessionTimeout" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, the client wishes to get a session with the given inactivity timeout.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransactionType">
+		<xs:annotation>
+			<xs:documentation>Transaction ID within requests and responses.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="TimeStamp" type="xs:dateTime"/>
+			<xs:element name="MessageID" type="xs:nonNegativeInteger">
+				<xs:annotation>
+					<xs:documentation>Unique ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ErrorCodeType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for error codes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:complexType name="ErrorType">
+		<xs:annotation>
+			<xs:documentation>Errors.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Code" type="ErrorCodeType">
+				<xs:annotation>
+					<xs:documentation>Code of the error taken from the list of allowed error codes.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NonFatal" type="xs:boolean" default="false" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, the corresponding operation was in general successful and operations can continue.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SystemMessage" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text for system logging, explaining the error more detailed. Should be in English.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserMessage" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text for user information in requested language.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ClassType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for car classes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for engines.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="PlugType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for plug types of charging points.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:simpleType name="AttributeClassType">
+		<xs:annotation>
+			<xs:documentation>Enumeration for attribute classes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:complexType name="InfoType">
+		<xs:annotation>
+			<xs:documentation>Structured information classification with associated text.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Text" type="TextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Text of the informaton to be shown to the user.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WithText" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Defines, whether this information has a text meant for the user or not.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Class" type="AttributeClassType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Class of the information, taken from the list of allowed values.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Mandatory" type="xs:boolean" default="false" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Defines whether the information has to be shown to the user in any case.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Importance" type="PercentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Importance of the information in percent.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="URL" type="xs:anyURI" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>URL to additional information on this information. If available, the whole information text has to be used as the marked link.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AttributeType">
+		<xs:annotation>
+			<xs:documentation>Structured attribute classification with associated text.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="InfoType">
+				<xs:sequence>
+					<xs:element name="ID" type="AttributeIDType">
+						<xs:annotation>
+							<xs:documentation>Internal code of the attribute for referencing.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Separate" type="xs:boolean" default="false" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If set to true, this attribute describes accessory equipment, which has to be booked separately.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BookingTargetPropertiesType">
+		<xs:annotation>
+			<xs:documentation>Needed properties of a booking target for synchronous availability.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Class" type="ClassType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Allowed classes of the bookee. If none are given, all are allowed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Engine" type="EngineType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Allowed engines of the bookee. If none are given, all are allowed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NeededAttributeID" type="AttributeIDType" minOccurs="0"
+				maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Needed attributes of the bookee.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ForbiddenAttributeID" type="AttributeIDType" minOccurs="0"
+				maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Forbidden attributes of the bookee.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Distance" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Distance to drive in meters. The car-sharing system should return only those booking targets as available, which are able to drive that distance (according to state of charge).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SeverityFactor" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Severity factor of the proposed route in percentage. 100 represents a nearly flat route. The higher the value, the more energy is cosumed for driving the route. E.g. a value of 200 indecates, that twice as much energy will be consumed as would be for a nearly flat route of the same length.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service type definitions ****</xs:documentation>
+	</xs:annotation>
+	<xs:simpleType name="SubscriptionModeType">
+		<xs:annotation>
+			<xs:documentation>Subscription mode. "INITIAL", "RENEW", "ADD", "REMOVE"</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INITIAL"/>
+			<xs:enumeration value="RENEW"/>
+			<xs:enumeration value="ADD"/>
+			<xs:enumeration value="REMOVE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="AbstractBaseResponseType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Abstract type as a base for responses.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Error" type="ErrorType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

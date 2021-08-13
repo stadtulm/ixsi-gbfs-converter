@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2013 sp1 (x64) (http://www.altova.com) von Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) -->
+<xs:schema xmlns="http://www.ixsi-schnittstelle.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ixsi-schnittstelle.de/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--*******************************************************************-->
+	<!--Interface for X-Sharing Information (IXSI)-->
+	<!--*******************************************************************-->
+	<!--Spezifikation, Version 5.00 vom 2018-01-10-->
+	<!--Urheber: Peter von Grumbkow, HaCon Ing.-Ges. mbH und Dirk Hillbrecht, cantamen GmbH-->
+	<!--Diese Schnittstellenspezifikation steht unter folgender Lizenz: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Specification, Version 5.00 of 2018-01-10-->
+	<!--Authors: Peter von Grumbkow, HaCon Ing.-Ges. mbH and Dirk Hillbrecht, cantamen GmbH-->
+	<!--This interface specification is licensed according to: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Service definitions XSD file-->
+	<!--*******************************************************************-->
+	<xs:annotation>
+		<xs:documentation>**** Includes ****</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="ixsi_base.xsd"/>
+	<xs:annotation>
+		<xs:documentation>**** Data service type definitions ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="StopLinkType">
+		<xs:annotation>
+			<xs:documentation>Link from a car-sharing place to a stop.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="StopID" type="xs:token"/>
+			<xs:group ref="DurationGroup"/>
+			<xs:element name="Distance" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Distance for walking this link in meters. In case of areas, this is the probable distance to walk to get a vehicle.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ProviderType">
+		<xs:annotation>
+			<xs:documentation>Provider information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="ProviderIDType">
+				<xs:annotation>
+					<xs:documentation>Provider ID. For one provider this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>Printable full name of the provider.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerChoice" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>If set, this provider is presented to the user as a "home provider". This way this provider becomes a "customer provider".</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShortName" type="xs:normalizedString" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Printable short name of the provider.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AttributeID" type="AttributeIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Additional information on this provider (e.g. URLs, logo, inter-app-URLs).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="PlaceOrAreaGroup">
+		<xs:annotation>
+			<xs:documentation>Group for information which is used for places and free floating areas.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="TextType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Printable name(s) of the place or area.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProviderID" type="ProviderIDType">
+				<xs:annotation>
+					<xs:documentation>Provider ID, to which the place or area belongs to.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Description" type="TextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="StopLink" type="StopLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Walking links to stops.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AttributeID" type="AttributeIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Additional information on this place or area.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="PlaceType">
+		<xs:annotation>
+			<xs:documentation>Place information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="PlaceIDType">
+				<xs:annotation>
+					<xs:documentation>Place ID. For one physical place this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalID" type="GlobalIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Globallly unique ID of this object. Used for identifying clones of this object, if they are delivered from different systems. Such ID should use the format of a URI.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeoPosition" type="GeoPositionType">
+				<xs:annotation>
+					<xs:documentation>Geo position of the place.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Capacity" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capacity of the place for returning booking targets.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:group ref="PlaceOrAreaGroup"/>
+			<xs:element name="OnPremisesTime" type="xs:duration" default="PT0S" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Additional time needed for walking to the place on the premises. Can be used for large parking areas or parking houses. Defaults to 0. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ProbabilityPlaceIDType">
+		<xs:annotation>
+			<xs:documentation>Place ID with a probability for getting a booking target.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="PlaceIDType">
+				<xs:annotation>
+					<xs:documentation>Place ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Probability" type="PercentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Average probability for getting a booking target at this place. Useful only for places within in PlaceGroups.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PlaceGroupType">
+		<xs:annotation>
+			<xs:documentation>Place groups.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="PlaceGroupIDType">
+				<xs:annotation>
+					<xs:documentation>Place group ID. For one physical place group this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PlaceID" type="ProbabilityPlaceIDType" maxOccurs="unbounded"/>
+			<xs:element name="Probability" type="PercentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Average probability for getting a booking target at a specific place in this place group. It only applies for those places, for which no specific value is provided.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AreaType">
+		<xs:annotation>
+			<xs:documentation>Geographic area for picking up a booking target.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Polygon" type="DurationPolygonType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Geographic closed polygons being part of the area. A point belongs to the area, if it is within none of the given exclusion polygons and within at least one of the given inclusion polygons.
+The duration at a geographic position is the minimum duration of all fitting polygons.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ExcPolygon" type="PolygonType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Geographic closed exclusion polygons.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnAreaType">
+		<xs:annotation>
+			<xs:documentation>Geographic area for returning a booking target.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Polygon" type="PolygonType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Geographic polygons being part of the area. A point belongs to the area, if it is within none of the given exclusion polygons and within at least one of the given inclusion polygons.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ExcPolygon" type="PolygonType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Geographic exclusion polygons.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FloatingDomainType">
+		<xs:annotation>
+			<xs:documentation>Free floating areas.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="DomainIDType">
+				<xs:annotation>
+					<xs:documentation>Domain ID. For one free floating domain this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:group ref="PlaceOrAreaGroup">
+				<xs:annotation>
+					<xs:documentation>Group for information which is used for places and free floating domains.</xs:documentation>
+				</xs:annotation>
+			</xs:group>
+			<xs:element name="Area" type="AreaType">
+				<xs:annotation>
+					<xs:documentation>Geographic definition of the free floating area. Contains including polygons and excluding polygons. This area definition is always used for picking up a booking target. If no separate return area is defined, this definition is also used for returning a booking target.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReturnArea" type="ReturnAreaType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If defined, this area definition defines where a booking target can be returned. No other polygons may be used then.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChargerType">
+		<xs:annotation>
+			<xs:documentation>Charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="ChargerIDType">
+				<xs:annotation>
+					<xs:documentation>ChargerID. For one physical charging place this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalID" type="GlobalIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Globallly unique ID of this object. Used for identifying clones of this object, if they are delivered from different systems. Such ID should use the format of a URI.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="TextType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Printable name of the charging place.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PlaceID" type="PlaceIDType">
+				<xs:annotation>
+					<xs:documentation>PlaceID where this charging place is situated.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PlugTypes" type="PlugType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Available plug types at this charging place, no matter how many of each.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Capacity" type="xs:positiveInteger">
+				<xs:annotation>
+					<xs:documentation>Number of vehicles, which can be charged at the same time.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BookingHorizon" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Maximum duration in future, when this charging place can be booked. This is relative to the current time. If missing, no maximum is defined.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AttributeID" type="AttributeIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Additional information on this charging place, e.g. maximal power, etc.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UsuallyAvailable" type="xs:boolean" default="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Flag, whether this Charger is usually available for public use, or not (e.g. in case of privately owned chargers).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OccupancySensor" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Does the charging place have an occupancy sensor?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BookingTargetType">
+		<xs:annotation>
+			<xs:documentation>Booking target information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="BookeeIDType">
+				<xs:annotation>
+					<xs:documentation>BookeeID. For one physical booking target this ID has to remain constant for subsequent responses.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalID" type="GlobalIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Globallly unique ID of this object. Used for identifying clones of this object, if they are delivered from different systems. Such ID should use the format of a URI.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="TextType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Printable name of the bookee.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="PlaceID" type="PlaceIDType">
+					<xs:annotation>
+						<xs:documentation>Place ID, where the bookee is placed. This has to be filled for station based booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceGroupID" type="PlaceGroupIDType">
+					<xs:annotation>
+						<xs:documentation>PLace group ID of this bookee, if it does not belong to a fixed place.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="DomainID" type="DomainIDType">
+					<xs:annotation>
+						<xs:documentation>Domain ID of this bookee. This has to be filled for free floating booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="Class" type="ClassType">
+				<xs:annotation>
+					<xs:documentation>Class of the bookee.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BookingHorizon" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Maximum duration in future, when this target can be booked. This is relative to the current time. If missing, no maximum is defined.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BookingGrid" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Grid for start and end time of bookings in minutes. Should be a divisor of 60. Examples: 1, 5, 10, 15, 30, 60.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OpeningTime" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Time needed for actually opening the booking target. If not given, the client system will assume some reasonable time.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Engine" type="EngineType" minOccurs="0"/>
+			<xs:element name="CO2Factor" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>CO2 emmision in gram per kilometer.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxDistance" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Maximal distance in meters, this bookee can go without longer stops. If not given, no limit is assumed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AttributeID" type="AttributeIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Additional information on this bookee, e.g. air-conditioning, navigational system, etc.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BookingTargetAvailabilityType">
+		<xs:annotation>
+			<xs:documentation>Availability of booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="BookingTargetIDType"/>
+			<xs:element name="PlaceID" type="PlaceIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For currently available booking targets, which are not bound to a specific place, the current place should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeoPosition" type="GeoPositionType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For currently available booking targets, which are not place bounded, the current position should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Inavailability" type="TimePeriodType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Periods of inavailability of the booking target.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrentStateOfCharge" type="PercentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current state of charge iof booking target in percent.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrentDrivingRange" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current driving range of booking target in meters, given a nearly flat route. If not given, the vehice is considered to have an infinite driving range.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BookingTargetChangeAvailabilityType">
+		<xs:annotation>
+			<xs:documentation>Changes in availability of booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="BookingTargetIDType">
+				<xs:annotation>
+					<xs:documentation>Booking target ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PlaceID" type="PlaceIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For currently available booking targets, which are not bound to a specific place, the current place should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeoPosition" type="GeoPositionType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For newly available vehicles, which are not place bounded, the position should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice minOccurs="0">
+				<xs:element name="Inavailability" type="TimePeriodType">
+					<xs:annotation>
+						<xs:documentation>New inavailability period</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Availability" type="TimePeriodType">
+					<xs:annotation>
+						<xs:documentation>New availability period.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="CurrentStateOfCharge" type="PercentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current state of charge iof booking target in percent.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrentDrivingRange" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current driving range of booking target in meters, given a nearly flat route. If not given, the vehice is considered to have an infinite driving range.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilityType">
+		<xs:annotation>
+			<xs:documentation>Available capacity of a place.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="ProviderPlaceIDType"/>
+			<xs:element name="Availability" type="xs:nonNegativeInteger">
+				<xs:annotation>
+					<xs:documentation>Currently available capacity for returning booking targets. This is the number of booking targets which could be returned now, without exceeding the overall capacity of the place.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilityType">
+		<xs:annotation>
+			<xs:documentation>Availability of a charger.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="ChargingPlaceIDType"/>
+			<xs:element name="Inavailability" type="TimePeriodType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Periods of inavailability of the charging place.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrentCapacity" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current capacity at the charging place. No prognosis, only current state. That many vehicles could start charging now.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChargerChangeAvailabilityType">
+		<xs:annotation>
+			<xs:documentation>Changes in availability of charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ID" type="ChargingPlaceIDType">
+				<xs:annotation>
+					<xs:documentation>Charging place ID.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice minOccurs="0">
+				<xs:element name="Inavailability" type="TimePeriodType">
+					<xs:annotation>
+						<xs:documentation>New inavailability period</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Availability" type="TimePeriodType">
+					<xs:annotation>
+						<xs:documentation>New availability period.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="CurrentCapacity" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Current capacity at the charging place. No prognosis, only current state. That many vehicles could start charging now.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Static data" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="BaseDataRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for getting all infos for all booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ProviderFilter" type="ProviderIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>If set, the filter contains those providers, data is requested for. If not set, data for all providers is requested.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IncludeBookees" type="xs:boolean" default="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, bookees and all corresponding information is included in response.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IncludeChargers" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, chargers and all corresponding information is included in response.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BaseDataResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for getting all infos for all booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="Timestamp" type="xs:dateTime" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Timestamp of this data delivery. The delivering system should be able to identify changes compared to this delivery by this timestamp.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Bookee" type="BookingTargetType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of bookees.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Charger" type="ChargerType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of chargers.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Place" type="PlaceType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of places referenced by bookees.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlaceGroup" type="PlaceGroupType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of place groups referenced by bookees.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FreeFloatingDomain" type="FloatingDomainType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of free-floating domains, referenced by bookees.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Provider" type="ProviderType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of providers, referenced by areas, places, chargers, and bookees.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Attributes" type="AttributeType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Collection of attributes, referenced by bookees, chargers, providers, areas, and places.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ChangedProvidersRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for getting those providers with changed static data.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Timestamp" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Timestamp of the static data delivery, the changes are requested for.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IncludeBookees" type="xs:boolean" default="true" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, bookees and all corresponding information is included in response.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IncludeChargers" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, chargers and all corresponding information is included in response.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChangedProvidersResponseType">
+		<xs:annotation>
+			<xs:documentation>Repsonse for getting those providers with changed static data.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="Provider" type="ProviderIDType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>List of providers, which have changes in their static data.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Availability query" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="AvailabilityRequestType">
+		<xs:annotation>
+			<xs:documentation>Synchronous request for availabilities of booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="BookingTarget" type="BookingTargetIDType" maxOccurs="unbounded"/>
+				<xs:element name="Circle" type="GeoCircleType"/>
+				<xs:element name="GeoRectangle" type="GeoRectangleType"/>
+			</xs:choice>
+			<xs:element name="TimePeriod" type="TimePeriodType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Interesting time period, for which availabilities of the given booking targets shall be returned. If not given, currently available booking targets should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Properties" type="BookingTargetPropertiesType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AvailabilityResponseType">
+		<xs:annotation>
+			<xs:documentation>Synchronous response for availabilites of booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="BookingTarget" type="BookingTargetAvailabilityType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>List of booking targets and their availabilities. Not listed booking targets are considered to be either unknown to the car sharing system or not available at all in the requested time period.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Available places query" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="PlaceAvailabilityRequestType">
+		<xs:annotation>
+			<xs:documentation>Synchronous request for the available capacity of places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="PlaceID" type="ProviderPlaceIDType" maxOccurs="unbounded"/>
+				<xs:element name="Circle" type="GeoCircleType"/>
+				<xs:element name="GeoRectangle" type="GeoRectangleType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilityResponseType">
+		<xs:annotation>
+			<xs:documentation>Synchronous response for the available capacity of places..</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="Place" type="PlaceAvailabilityType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>List of places and their available capacity. Not listed places are considered to be either unknown to the car sharing system or not available at all.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Available chargers query" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="ChargerAvailabilityRequestType">
+		<xs:annotation>
+			<xs:documentation>Synchronous request for the availabilities of charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="Chargers" type="ChargingPlaceIDType" maxOccurs="unbounded"/>
+				<xs:element name="Circle" type="GeoCircleType"/>
+				<xs:element name="GeoRectangle" type="GeoRectangleType"/>
+			</xs:choice>
+			<xs:element name="TimePeriod" type="TimePeriodType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Interesting time period, for which availabilities of the given charging places shall be returned. If not given, currently available charging places should be returned.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Duration" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For how long is the charging place needed?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NeededEnergy" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Needed sum of energy for loading in kWh.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilityResponseType">
+		<xs:annotation>
+			<xs:documentation>Synchronous response for the availabilities of charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="Charger" type="ChargerAvailabilityType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Availability subscription" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="AvailabilitySubscriptionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for subscribing to availabilities of given booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="BookingTargetID" type="BookingTargetIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Booking tragets to subscribe/unsubscribe.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Mode" type="SubscriptionModeType" default="INITIAL" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Mode of subscrption change. "INITIAL" defines a completely new subscription (leads to sending of complete status). "RENEW" redefines the complete list if subscribed objects (leads to sending of complete status only for newly added objects). "ADD" adds subscribed objects (leads to sending of complete status for added objects). "REMOVE" removes subscribed objects.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EventHorizon" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If set, the event horizon defines the time in future, for wich the subscription is valid. This value is used for all subscribed booking targets. This duration is relative to the current time.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AvailabilitySubscriptionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for subscribing to availabilities of given booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AvailabilitySubscriptionStatusRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for getting all subsribed booking targets.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="AvailabilitySubscriptionStatusResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for getting all subscribed booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="BookingTargetID" type="BookingTargetIDType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Subscribed booking targets.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AvailabilityPushMessageType">
+		<xs:annotation>
+			<xs:documentation>Push message containing changes in availability of subscribed booking targets.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AvailabilityChange" type="BookingTargetChangeAvailabilityType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Available places subscription" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="PlaceAvailabilitySubscriptionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for subscribing to available capacity of places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PlaceID" type="ProviderPlaceIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Places to subscribe/unsubscribe.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Mode" type="SubscriptionModeType" default="INITIAL" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Mode of subscrption change. "INITIAL" defines a completely new subscription (leads to sending of complete status). "RENEW" redefines the complete list if subscribed objects (leads to sending of complete status only for newly added objects). "ADD" adds subscribed objects (leads to sending of complete status for added objects). "REMOVE" removes subscribed objects.</xs:documentation>
+					<xs:documentation xml:lang="de">Modus of subscrption change. "INITIAL" defines a completely new subscription (leads to sending of complete status). "RENEW" redefines the complete list if subscribed objects (leads to sending of complete status only for newly added objects). "ADD" adds subscribed objects (leads to sending of complete status for added objects). "REMOVE" removes subscribed objects.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilitySubscriptionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for subscribing to available capacity of places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilitySubscriptionStatusRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for getting all subsribed places.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilitySubscriptionStatusResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for getting all subscribed places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="PlaceID" type="ProviderPlaceIDType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Subscribed places.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PlaceAvailabilityPushMessageType">
+		<xs:annotation>
+			<xs:documentation>Push message containing changes in availability of subscribed places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PlaceAvailability" type="PlaceAvailabilityType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** Service "Available charging place subscription" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="ChargerAvailabilitySubscriptionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for subscribing to availabilities odf given charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ChargerID" type="ChargingPlaceIDType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Charging places to subscribe/unsubscribe.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Mode" type="SubscriptionModeType" default="INITIAL" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Mode of subscrption change. "INITIAL" defines a completely new subscription (leads to sending of complete status). "RENEW" redefines the complete list if subscribed objects (leads to sending of complete status only for newly added objects). "ADD" adds subscribed objects (leads to sending of complete status for added objects). "REMOVE" removes subscribed objects.</xs:documentation>
+					<xs:documentation xml:lang="de">Modus of subscrption change. "INITIAL" defines a completely new subscription (leads to sending of complete status). "RENEW" redefines the complete list if subscribed objects (leads to sending of complete status only for newly added objects). "ADD" adds subscribed objects (leads to sending of complete status for added objects). "REMOVE" removes subscribed objects.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilitySubscriptionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for subscribing to availabilities odf given charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilitySubscriptionStatusRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for getting all subsribed charging places.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilitySubscriptionStatusResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for getting all subscribed charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="ChargerID" type="ChargingPlaceIDType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Subscribed charging places.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ChargerAvailabilityPushMessageType">
+		<xs:annotation>
+			<xs:documentation>Push message containing changes in availability of subscribed charging places.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AvailabilityChange" type="ChargerChangeAvailabilityType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

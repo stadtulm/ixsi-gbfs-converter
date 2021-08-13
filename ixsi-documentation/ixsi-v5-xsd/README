@@ -1,0 +1,6 @@
+This directory contains the Ixsi v5 XSD files and an XJB file which controls the Java conversion process.
+The Ixsi schema files are copied verbatim from the official Ixsi repositories.
+They are copied here so that no hard dependency on the Ixsi distribution is created.
+If there are changes to the Ixsi schema, the schema-describing files have to be copied over the currently stored versions.
+
+The schema files are evaluated by the mkixsiv5stubs.sh script.

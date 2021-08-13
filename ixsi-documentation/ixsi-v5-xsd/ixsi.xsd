@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2013 sp1 (x64) (http://www.altova.com) von Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) -->
+<xs:schema xmlns="http://www.ixsi-schnittstelle.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ixsi-schnittstelle.de/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--*******************************************************************-->
+	<!--Interface for X-Sharing Information (IXSI)-->
+	<!--*******************************************************************-->
+	<!--Spezifikation, Version 5.00 vom 2018-01-10-->
+	<!--Urheber: Peter von Grumbkow, HaCon Ing.-Ges. mbH und Dirk Hillbrecht, cantamen GmbH-->
+	<!--Diese Schnittstellenspezifikation steht unter folgender Lizenz: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Specification, Version 5.00 of 2018-01-10-->
+	<!--Authors: Peter von Grumbkow, HaCon Ing.-Ges. mbH and Dirk Hillbrecht, cantamen GmbH-->
+	<!--This interface specification is licensed according to: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Main XSD file, containing message definition-->
+	<!--*******************************************************************-->
+	<xs:annotation>
+		<xs:documentation>**** Includes ****</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="ixsi_admin_services.xsd"/>
+	<xs:include schemaLocation="ixsi_data_services.xsd"/>
+	<xs:annotation>
+		<xs:documentation>**** Message container ****</xs:documentation>
+	</xs:annotation>
+	<xs:group name="UserTriggeredRequestGroup">
+		<xs:annotation>
+			<xs:documentation>Requests which are directly triggered through a user interaction.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Language" type="xs:language" default="de" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Requested language for the results. All texts returned in the respective responses should be in this language.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auth" type="AuthType">
+				<xs:annotation>
+					<xs:documentation>Authentication information.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="OpenSession" type="OpenSessionRequestType">
+					<xs:annotation>
+						<xs:documentation>Open a session for a user.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="CloseSession" type="CloseSessionRequestType">
+					<xs:annotation>
+						<xs:documentation>Explicitely close a session.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="TokenGeneration" type="TokenGenerationRequestType">
+					<xs:annotation>
+						<xs:documentation>Generate a token for a user which replaces his password.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Availability" type="AvailabilityRequestType">
+					<xs:annotation>
+						<xs:documentation>Get the availability for the given booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailability" type="PlaceAvailabilityRequestType">
+					<xs:annotation>
+						<xs:documentation>Get the availabile capacity for the given places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailability" type="ChargerAvailabilityRequestType">
+					<xs:annotation>
+						<xs:documentation>Get the availability for the given charging places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="UserTriggeredResponseGroup">
+		<xs:annotation>
+			<xs:documentation>Responses, which are directly triggered through a user interaction.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SessionID" type="SessionIDType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If returned, a session for the user was opened. This session ID can be reused for authentication in the next request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SessionTimeout" type="xs:duration" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Inactivity timeout of the session. If a period of inactivity on this session exceeds this value, the session timeouts.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="OpenSession" type="OpenSessionResponseType">
+					<xs:annotation>
+						<xs:documentation>Open a session for the user.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="CloseSession" type="CloseSessionResponseType">
+					<xs:annotation>
+						<xs:documentation>Explicitely close a session.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="TokenGeneration" type="TokenGenerationResponseType">
+					<xs:annotation>
+						<xs:documentation>Generate a token for a user which replaces his password.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Availability" type="AvailabilityResponseType">
+					<xs:annotation>
+						<xs:documentation>Get the availability for the given booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailability" type="PlaceAvailabilityResponseType">
+					<xs:annotation>
+						<xs:documentation>Get the availabile capacity for the given places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailability" type="ChargerAvailabilityResponseType">
+					<xs:annotation>
+						<xs:documentation>Get the availability for the given charging places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="StaticDataRequestGroup">
+		<xs:annotation>
+			<xs:documentation>Requests for static data.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="BaseData" type="BaseDataRequestType">
+					<xs:annotation>
+						<xs:documentation>Get static data for all booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChangedProviders" type="ChangedProvidersRequestType">
+					<xs:annotation>
+						<xs:documentation>Get providers with changes in their static data since the given timestamp.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="StaticDataResponseGroup">
+		<xs:annotation>
+			<xs:documentation>Responses containing static data.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="BaseData" type="BaseDataResponseType">
+					<xs:annotation>
+						<xs:documentation>Get the static data for all booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChangedProviders" type="ChangedProvidersResponseType">
+					<xs:annotation>
+						<xs:documentation>Get providers with changes in their static data since the given timestamp.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SubscriptionAdministrationRequestGroup">
+		<xs:annotation>
+			<xs:documentation>Requests for administrating subscription connections. Each request is answered by exactly one response.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="HeartBeat" type="HeartBeatRequestType">
+					<xs:annotation>
+						<xs:documentation>Check a connection.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SubscriptionAdministrationResponseGroup">
+		<xs:annotation>
+			<xs:documentation>Responses for administrating subscription connections. Each response corresponds to exactly one request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="HeartBeat" type="HeartBeatResponseType">
+					<xs:annotation>
+						<xs:documentation>Check a connection.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SubscriptionRequestGroup">
+		<xs:annotation>
+			<xs:documentation>Requests for subscriptions. Each request is answered by exactly one response.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="AvailabilitySubscription" type="AvailabilitySubscriptionRequestType">
+					<xs:annotation>
+						<xs:documentation>Subscribe for availabilities of booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AvailabilitySubscriptionStatus" type="AvailabilitySubscriptionStatusRequestType">
+					<xs:annotation>
+						<xs:documentation>Check availability subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailabilitySubscription" type="PlaceAvailabilitySubscriptionRequestType">
+					<xs:annotation>
+						<xs:documentation>Subscribe to available capacities of places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailabilitySubscriptionStatus" type="PlaceAvailabilitySubscriptionStatusRequestType">
+					<xs:annotation>
+						<xs:documentation>Check place subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailabilitySubscription" type="ChargerAvailabilitySubscriptionRequestType">
+					<xs:annotation>
+						<xs:documentation>Subscribe to availabilities of charging places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailabilitySubscriptionStatus" type="ChargerAvailabilitySubscriptionStatusRequestType">
+					<xs:annotation>
+						<xs:documentation>Check charging place subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SubscriptionResponseGroup">
+		<xs:annotation>
+			<xs:documentation>Responses for subscriptions. Each response corresponds to exactly one request.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="AvailabilitySubscription" type="AvailabilitySubscriptionResponseType">
+					<xs:annotation>
+						<xs:documentation>Subscribe for availabilities of booking targets.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AvailabilitySubscriptionStatus" type="AvailabilitySubscriptionStatusResponseType">
+					<xs:annotation>
+						<xs:documentation>Check availability subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailabilitySubscription" type="PlaceAvailabilitySubscriptionResponseType">
+					<xs:annotation>
+						<xs:documentation>Subscribe to available capacities of places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailabilitySubscriptionStatus" type="PlaceAvailabilitySubscriptionStatusResponseType">
+					<xs:annotation>
+						<xs:documentation>Check place subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailabilitySubscription" type="ChargerAvailabilitySubscriptionResponseType">
+					<xs:annotation>
+						<xs:documentation>Subscribe to availabilites of charging places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailabilitySubscriptionStatus" type="ChargerAvailabilitySubscriptionStatusResponseType">
+					<xs:annotation>
+						<xs:documentation>Check charging place subscriptions.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PushMessageGroup">
+		<xs:annotation>
+			<xs:documentation>Messages for getting subscribed information. Messages do not correspond to any request or response.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="AvailabilityPush" type="AvailabilityPushMessageType">
+					<xs:annotation>
+						<xs:documentation>Push message for availabilities.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PlaceAvailabilityPush" type="PlaceAvailabilityPushMessageType">
+					<xs:annotation>
+						<xs:documentation>Push message for places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChargerAvailabilityPush" type="ChargerAvailabilityPushMessageType">
+					<xs:annotation>
+						<xs:documentation>Push message for charging places.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="QueryRequestType">
+		<xs:annotation>
+			<xs:documentation>Request messages in query scheme.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Transaction" type="TransactionType">
+				<xs:annotation>
+					<xs:documentation>Transaction identifier, set by the requestor.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SystemID" type="SystemIDType">
+				<xs:annotation>
+					<xs:documentation>ID of the requesting system.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="APIKey" type="xs:NMTOKEN" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>API key of the calling system. Should be sent always, if defined.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:group ref="StaticDataRequestGroup"/>
+				<xs:group ref="UserTriggeredRequestGroup"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="QueryResponseType">
+		<xs:annotation>
+			<xs:documentation>Response messages in query scheme.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Transaction" type="TransactionType">
+				<xs:annotation>
+					<xs:documentation>Transaction identifier, copied from the corresponding request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CalcTime" type="xs:duration">
+				<xs:annotation>
+					<xs:documentation>Real time needed for calculating the contained results.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:group ref="StaticDataResponseGroup"/>
+				<xs:group ref="UserTriggeredResponseGroup"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubscriptionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request messages in subscription scheme.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Transaction" type="TransactionType">
+				<xs:annotation>
+					<xs:documentation>Transaction identifier, set by the requestor.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SystemID" type="SystemIDType">
+				<xs:annotation>
+					<xs:documentation>ID of the requesting system.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="APIKey" type="xs:NMTOKEN" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>API key of the calling system. Should be sent always, if defined.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:group ref="SubscriptionAdministrationRequestGroup"/>
+				<xs:group ref="SubscriptionRequestGroup"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubscriptionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response messages in subscription scheme.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Transaction" type="TransactionType">
+				<xs:annotation>
+					<xs:documentation>Transaction identifier, copied from the corresponding request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CalcTime" type="xs:duration">
+				<xs:annotation>
+					<xs:documentation>Real time needed for calculating the contained results.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:group ref="SubscriptionAdministrationResponseGroup"/>
+				<xs:group ref="SubscriptionResponseGroup"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubscriptionMessageType">
+		<xs:annotation>
+			<xs:documentation>Delivery messages in subscription scheme.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:group ref="PushMessageGroup"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IxsiMessageType">
+		<xs:annotation>
+			<xs:documentation>Type for all IXSI messages.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="Request" type="QueryRequestType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Independent requests in query scheme. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Response" type="QueryResponseType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Independent responses in query scheme.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SubscriptionRequest" type="SubscriptionRequestType">
+				<xs:annotation>
+					<xs:documentation>Request in subscription scheme. Each request leads to at least one response.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SubscriptionResponse" type="SubscriptionResponseType">
+				<xs:annotation>
+					<xs:documentation>Response in subscription scheme. Each response corresponds to exactly one request.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SubscriptionMessage" type="SubscriptionMessageType">
+				<xs:annotation>
+					<xs:documentation>Push message in subscription scheme.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="Ixsi" type="IxsiMessageType">
+		<xs:annotation>
+			<xs:documentation>Root element for all IXSI messages. IXSI = Interface for X-Sharing Information.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

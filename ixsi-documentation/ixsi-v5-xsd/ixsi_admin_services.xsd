@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2013 sp1 (x64) (http://www.altova.com) von Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) bearbeitet -->
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (x64) (http://www.altova.com) by Peter von Grumbkow (HaCon Ingenieurgesellschaft mbH) -->
+<xs:schema xmlns="http://www.ixsi-schnittstelle.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ixsi-schnittstelle.de/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--*******************************************************************-->
+	<!--Interface for X-Sharing Information (IXSI)-->
+	<!--*******************************************************************-->
+	<!--Spezifikation, Version 5.00 vom 2018-01-15-->
+	<!--Urheber: Peter von Grumbkow, HaCon Ing.-Ges. mbH und Dirk Hillbrecht, cantamen GmbH-->
+	<!--Diese Schnittstellenspezifikation steht unter folgender Lizenz: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Specification, Version 5.00 of 2018-01-10-->
+	<!--Authors: Peter von Grumbkow, HaCon Ing.-Ges. mbH and Dirk Hillbrecht, cantamen GmbH-->
+	<!--This interface specification is licensed according to: CC BY-ND 3.0 DE (Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland), http://creativecommons.org/licenses/by-nd/3.0/de/-->
+	<!--*******************************************************************-->
+	<!--Service definitions XSD file-->
+	<!--*******************************************************************-->
+	<xs:annotation>
+		<xs:documentation>**** Includes ****</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="ixsi_base.xsd"/>
+	<xs:annotation>
+		<xs:documentation>**** BaseService "Session" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="OpenSessionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for opening a session for a user. Can be used for user triggered functions.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="OpenSessionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for for opening a session for a user.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CloseSessionRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for closing an existing session.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="CloseSessionResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for closing an existing session.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** BaseService "Heartbeat" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="HeartBeatRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for checking a connection.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="HeartBeatResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for checking a connection.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:annotation>
+		<xs:documentation>**** BaseService "Token Generation" ****</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="TokenGenerationRequestType">
+		<xs:annotation>
+			<xs:documentation>Request for generating a token for a user.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="TokenGenerationResponseType">
+		<xs:annotation>
+			<xs:documentation>Response for generating a token for a user.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="AbstractBaseResponseType">
+				<xs:sequence>
+					<xs:element name="Token" type="xs:token" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Token for the user. Can be used in future instead of the password for authentication.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
