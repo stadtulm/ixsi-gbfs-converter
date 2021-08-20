@@ -6,6 +6,7 @@ const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
 const { DateTime } = require("luxon");
+require('log-timestamp');
 
 const GBFS_VERSION = "2.0"
 
@@ -137,7 +138,7 @@ class IxsiGbfsConverter {
     setTimeout(()=>{
       //if last send message has no aswer after 10 seconds, close and reconnect
       if (this.lastReceivedDataTime < Date.now()/1000 - 11) {
-        console.warn("response timepout, reconnect...")
+        console.warn("response timeout, reconnect...")
         this.connection.close()
       }
     }, 10*1000);
@@ -152,11 +153,13 @@ class IxsiGbfsConverter {
     let messageId = ixsiObj?.Ixsi?.Response?.Transaction?.MessageID;
     switch (messageId) {
       case this.messageIdBookie:
+        console.log("received bookie response")
         this.messageIdBookie = this.messageIdBookie + 2; // iterate message ID, so next message gets a new ID
         this.writeStationInformation(ixsiObj); // write station_information.json
         this.buildStationStatus(ixsiObj); // prepare station status and do availability request
         break;
       case this.messageIdAvailablility:
+        console.log("received availability response")
         this.messageIdAvailablility = this.messageIdAvailablility + 2; // iterate message ID, so next message gets a new ID
         this.writeStationStatus(ixsiObj); // parse availabilities and write station_status.json
         break;
