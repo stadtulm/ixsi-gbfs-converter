@@ -215,6 +215,7 @@ class IxsiGbfsConverter {
       version: GBFS_VERSION,
     };
     if (places) {
+      console.log(`parsing information of ${places.length} stations.`)
       for (let place of places) {
         let name = place?.Name?.Text;
         let station_id = place?.ID;
@@ -359,6 +360,7 @@ class IxsiGbfsConverter {
     let bookingTargets = ixsiObj?.Ixsi?.Response?.Availability?.BookingTarget;
     let requestTimestamp = this.getResponseTimeStampFromIxsi(ixsiObj);
     if (bookingTargets) {
+      console.log(`parsing availability information of ${bookingTargets.length} targets.`)
       for (let bookingTarget of bookingTargets) {
         let gbfsStation = this.gbfsStationStatus.data.stations.filter(
           (p) => p.station_id == bookingTarget.PlaceID.toString()
